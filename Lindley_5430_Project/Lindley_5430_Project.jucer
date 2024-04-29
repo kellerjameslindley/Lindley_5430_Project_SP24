@@ -5,6 +5,8 @@
               jucerFormatVersion="1" pluginFormats="buildAU,buildStandalone,buildVST3">
   <MAINGROUP id="LIpZPv" name="Lindley_5430_Project">
     <GROUP id="{2156E6F4-D3F1-83D8-9322-76E3ECF1F939}" name="Source">
+      <FILE id="dbdDFJ" name="Filter.cpp" compile="1" resource="0" file="Source/DSP/Filter.cpp"/>
+      <FILE id="rutGcu" name="Filter.h" compile="0" resource="0" file="Source/DSP/Filter.h"/>
       <FILE id="W1ojJO" name="BitReducer.cpp" compile="1" resource="0" file="Source/DSP/BitReducer.cpp"/>
       <FILE id="ZQ2IUb" name="BitReducer.h" compile="0" resource="0" file="Source/DSP/BitReducer.h"/>
       <FILE id="IHZ5Yn" name="DownSampler.cpp" compile="1" resource="0" file="Source/DSP/DownSampler.cpp"/>

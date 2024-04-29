@@ -112,9 +112,13 @@ void Lindley_5430_ProjectAudioProcessor::prepareToPlay (double sampleRate, int s
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    
     bitReduce.setFs(sampleRate);
     bitReduce.setBitDepth(bitDepth);
-    bitReduce.prepareToPlay(sampleRate);
+    
+    filter.setFs(sampleRate);
+    filter.setCutoff(filterCutoff);
+    
     downSample.setFs(sampleRate);
     downSample.setRateDivisor(rateDivisor);
     
@@ -182,8 +186,9 @@ void Lindley_5430_ProjectAudioProcessor::processBlock (juce::AudioBuffer<float>&
         {
             
             auto* channelData = buffer.getWritePointer (channel);
-            bitReduce.processBuffer(channelData, buffer.getNumSamples(), channel);
-            downSample.processBuffer(channelData, buffer.getNumSamples(), channel);
+            bitReduce.processBuffer(channelData, numSamples, channel);
+            filter.processBuffer(channelData, numSamples, channel);
+            downSample.processBuffer(channelData, numSamples, channel);
 
         }
     

@@ -10,11 +10,7 @@
 
 #include "BitReducer.h"
 
-void BitReducer::prepareToPlay(double sampleRate){
-    if (Fs != sampleRate){
-        Fs = (float) sampleRate;
-    }
-}
+
 
 void BitReducer::processBuffer(float * buffer, const int numSamples, const int channel)
 {
@@ -33,7 +29,7 @@ void BitReducer::processBuffer(float * buffer, const int numSamples, const int c
 float BitReducer::processSample(float x, int channel)
 {
     
-    float totalQLevels = powf(2, 24);
+    float totalQLevels = powf(2, bitDepth);
     
     float remainder =fmodf(x, 1/totalQLevels);
     

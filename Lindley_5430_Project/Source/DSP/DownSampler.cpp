@@ -10,18 +10,13 @@
 
 #include "DownSampler.h"
 
-void DownSampler::prepareToPlay(double sampleRate){
-    if (Fs != sampleRate){
-        Fs = (float) sampleRate;
-    }
-}
+
 
 void DownSampler::processBuffer(float * samples, const int numSamples, const int channel)
 {
     
     // Perform the processing
     for (int n = 0; n < numSamples ; n++){
-        float x = samples[n];
         
         if (rateDivisor > 1)
         {

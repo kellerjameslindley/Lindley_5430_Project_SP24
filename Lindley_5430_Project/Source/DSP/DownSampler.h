@@ -14,7 +14,7 @@
 class DownSampler {
  public:
 
-    void prepareToPlay(double sampleRate);
+    DownSampler () {};
     
     void processBuffer(float * samples, const int numSamples, const int channel);
        

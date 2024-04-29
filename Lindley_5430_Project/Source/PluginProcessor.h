@@ -11,6 +11,8 @@
 #include <JuceHeader.h>
 #include "./DSP/BitReducer.h"
 #include "./DSP/DownSampler.h"
+#include "./DSP/Filter.h"
+
 
 //==============================================================================
 /**
@@ -55,8 +57,9 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    float bitDepth = 10.f;
+    float bitDepth = 24.f;
     int rateDivisor = 10;
+    float filterCutoff = 20000.f;
 
     
     
@@ -74,6 +77,7 @@ private:
     
     BitReducer bitReduce;
     DownSampler downSample;
+    Filter filter;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Lindley_5430_ProjectAudioProcessor)

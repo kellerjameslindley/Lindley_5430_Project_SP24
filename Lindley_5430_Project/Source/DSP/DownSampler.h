@@ -14,6 +14,8 @@
 class DownSampler {
  public:
 
+    void prepareToPlay(double sampleRate);
+    
     void processBuffer(float * samples, const int numSamples, const int channel);
        
     float processSample(float x, int channel);
@@ -24,12 +26,13 @@ class DownSampler {
     void setNewFs(float newFs);
     float getNewFs();
 
+    void setRateDivisor(int rateDivisor);
 
  private:
     float Fs = 48000;
     float newFs = 24000;
     
-    float decimationRatio = Fs/newFs;
+    int rateDivisor = 10;
 };
 
    

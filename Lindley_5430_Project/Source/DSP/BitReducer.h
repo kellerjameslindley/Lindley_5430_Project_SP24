@@ -15,6 +15,8 @@
 class BitReducer {
 public:
     
+    void prepareToPlay(double sampleRate);
+    
     
     void processBuffer(float * samples, const int numSamples, const int channel);
        
@@ -28,7 +30,7 @@ public:
 
 private:
     float Fs = 48000;
-    float bitDepth = 24;
+    float bitDepth = 10;
     
     float ampValues;
     float shrinkInput;

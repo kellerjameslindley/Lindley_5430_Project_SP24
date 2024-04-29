@@ -10,26 +10,36 @@
 
 #include "BitReducer.h"
 
-void BitReducer::processBuffer(float * samples, const int numSamples, const int channel)
+void BitReducer::prepareToPlay(double sampleRate){
+    if (Fs != sampleRate){
+        Fs = (float) sampleRate;
+    }
+}
+
+void BitReducer::processBuffer(float * buffer, const int numSamples, const int channel)
 {
     
     // Perform the processing
-    for (int n = 0; n < numSamples ; n++){
-        float x = samples[n];
+    for (int n = 0;  n < numSamples ; n++){
         
-        samples[n] = processSample(x,channel);
+        float x = buffer[n];
+        
+        buffer[n] = processSample(x,channel);
+        
+        
     }
 }
 
 float BitReducer::processSample(float x, int channel)
 {
-    ampValues = std::pow(2, bitDepth);
-    shrinkInput = (0.5f * x) + 5;
-    scaleInput = ampValues * shrinkInput;
-    roundInput = round(scaleInput);
-    prepOut = roundInput / ampValues;
     
-    y = 2 * prepOut - 1;
+    float totalQLevels = powf(2, 24);
+    
+    float remainder =fmodf(x, 1/totalQLevels);
+    
+    y = x - remainder;
+    
+
     return y;
 };
 

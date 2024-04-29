@@ -9,6 +9,13 @@
 */
 
 #include "DownSampler.h"
+
+void DownSampler::prepareToPlay(double sampleRate){
+    if (Fs != sampleRate){
+        Fs = (float) sampleRate;
+    }
+}
+
 void DownSampler::processBuffer(float * samples, const int numSamples, const int channel)
 {
     
@@ -16,13 +23,22 @@ void DownSampler::processBuffer(float * samples, const int numSamples, const int
     for (int n = 0; n < numSamples ; n++){
         float x = samples[n];
         
-        samples[n] = processSample(x,channel);
+        if (rateDivisor > 1)
+        {
+            if (fmodf(n,rateDivisor)!= 1) samples[n] = samples[n -  n%rateDivisor];
+        }
+        
+       
+        
+        
+        
     }
 }
 
 float DownSampler::processSample(float x, int channel)
 {
-    //decimationRatio = Fs/newFs;
+
+    
     
     return 0;
     
@@ -47,3 +63,8 @@ float DownSampler::getNewFs()
 {
     return Fs;
 };
+
+void DownSampler::setRateDivisor(int rateDivisor)
+{
+    this->rateDivisor = rateDivisor;
+}

@@ -55,7 +55,8 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    float bitDepth = 24.f;
+    float bitDepth = 10.f;
+    int rateDivisor = 10;
 
     
     
@@ -69,10 +70,11 @@ private:
     //juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     void parameterChanged (const juce::String& parameterID, float newValue) override;
     
-    //DownSampler downSample;
     
     
     BitReducer bitReduce;
+    DownSampler downSample;
+    
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Lindley_5430_ProjectAudioProcessor)
     

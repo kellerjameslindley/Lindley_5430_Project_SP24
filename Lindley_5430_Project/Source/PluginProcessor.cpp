@@ -114,6 +114,9 @@ void Lindley_5430_ProjectAudioProcessor::prepareToPlay (double sampleRate, int s
     // initialisation that you need..
     bitReduce.setFs(sampleRate);
     bitReduce.setBitDepth(bitDepth);
+    bitReduce.prepareToPlay(sampleRate);
+    downSample.setFs(sampleRate);
+    downSample.setRateDivisor(rateDivisor);
     
     
 }
@@ -156,6 +159,8 @@ void Lindley_5430_ProjectAudioProcessor::processBlock (juce::AudioBuffer<float>&
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
+    
+    auto numSamples = buffer.getNumSamples();
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
     // guaranteed to be empty - they may contain garbage).
@@ -172,15 +177,23 @@ void Lindley_5430_ProjectAudioProcessor::processBlock (juce::AudioBuffer<float>&
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
     
-    auto numSamples = buffer.getNumSamples();
     
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
-        
-        bitReduce.processBuffer(channelData, numSamples, channel);
-        
-    }
+        {
+            
+            auto* channelData = buffer.getWritePointer (channel);
+            bitReduce.processBuffer(channelData, buffer.getNumSamples(), channel);
+            downSample.processBuffer(channelData, buffer.getNumSamples(), channel);
+
+        }
+    
+      buffer.copyFrom(0, 0, buffer, 0, 0, numSamples);
+      buffer.copyFrom(1, 0, buffer, 1, 0, numSamples);
+    
+  
+
+    
+    
 }
 
 //==============================================================================

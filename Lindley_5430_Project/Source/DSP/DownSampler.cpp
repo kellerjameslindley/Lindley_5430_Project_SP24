@@ -24,7 +24,7 @@ float DownSampler::processSample(float x, int channel)
 {
     //decimationRatio = Fs/newFs;
     
-    
+    return 0;
     
 };
 

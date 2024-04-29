@@ -9,11 +9,13 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "./DSP/BitReducer.h"
+#include "./DSP/DownSampler.h"
 
 //==============================================================================
 /**
 */
-class Lindley_5430_ProjectAudioProcessor  : public juce::AudioProcessor
+class Lindley_5430_ProjectAudioProcessor  : public juce::AudioProcessor, public juce::AudioProcessorValueTreeState::Listener
 {
 public:
     //==============================================================================
@@ -53,7 +55,26 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    float bitDepth = 24.f;
+
+    
+    
+    using APVTS = juce::AudioProcessorValueTreeState;
+    static APVTS::ParameterLayout createParameterLayout();
+    
+    APVTS apvts {*this, nullptr, "PARAMETERS", createParameterLayout()};
+    
 private:
+    
+    //juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    void parameterChanged (const juce::String& parameterID, float newValue) override;
+    
+    //DownSampler downSample;
+    
+    
+    BitReducer bitReduce;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Lindley_5430_ProjectAudioProcessor)
+    
+    
 };

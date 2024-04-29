@@ -22,11 +22,28 @@ Lindley_5430_ProjectAudioProcessor::Lindley_5430_ProjectAudioProcessor()
                        )
 #endif
 {
+
+
+    
+    
 }
 
 Lindley_5430_ProjectAudioProcessor::~Lindley_5430_ProjectAudioProcessor()
 {
+    
+
+
+    
 }
+
+
+
+void Lindley_5430_ProjectAudioProcessor::parameterChanged(const juce::String &parameterID, float newValue)
+{
+  
+}
+
+
 
 //==============================================================================
 const juce::String Lindley_5430_ProjectAudioProcessor::getName() const
@@ -95,6 +112,10 @@ void Lindley_5430_ProjectAudioProcessor::prepareToPlay (double sampleRate, int s
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    bitReduce.setFs(sampleRate);
+    bitReduce.setBitDepth(bitDepth);
+    
+    
 }
 
 void Lindley_5430_ProjectAudioProcessor::releaseResources()
@@ -150,11 +171,15 @@ void Lindley_5430_ProjectAudioProcessor::processBlock (juce::AudioBuffer<float>&
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
+    
+    auto numSamples = buffer.getNumSamples();
+    
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
-
-        // ..do something to the data...
+        
+        bitReduce.processBuffer(channelData, numSamples, channel);
+        
     }
 }
 
@@ -172,17 +197,66 @@ juce::AudioProcessorEditor* Lindley_5430_ProjectAudioProcessor::createEditor()
 //==============================================================================
 void Lindley_5430_ProjectAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    juce::MemoryOutputStream stream(destData, false);
 }
 
 void Lindley_5430_ProjectAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+  
+        
+       
+    
+    
+    
 }
 
+juce::AudioProcessorValueTreeState::ParameterLayout Lindley_5430_ProjectAudioProcessor::createParameterLayout()
+{
+    
+    APVTS::ParameterLayout layout;
+    
+    using namespace juce;
+    
+    layout.add(std::make_unique<AudioParameterFloat>(juce::ParameterID("BitDepth", 1),
+                                                    "BitDepth",
+                                                    NormalisableRange<float>(2, 24, 1, 1),
+                                                    24));
+    
+    layout.add(std::make_unique<AudioParameterFloat>(juce::ParameterID("Threshold", 1),
+                                                    "Threshold",
+                                                    NormalisableRange<float>(-60, 12, 1, 1),
+                                                    0));
+    
+    auto attackReleaseRange = NormalisableRange<float>(5, 500, 1, 1);
+    
+    layout.add(std::make_unique<AudioParameterFloat>(juce::ParameterID("Attack", 1),
+                                                    "Attack",
+                                                    attackReleaseRange,
+                                                    50));
+    
+    layout.add(std::make_unique<AudioParameterFloat>(juce::ParameterID("Release", 1),
+                                                    "Release",
+                                                    attackReleaseRange,
+                                                    250));
+    
+    auto ratioChoices = std::vector<double>{1, 1.5, 2, 4, 8, 20};
+    juce::StringArray ratioChoicesArray;
+    
+    for (auto ratioChoice : ratioChoices )
+    {
+        ratioChoicesArray.add(juce::String(ratioChoice, 1));
+    }
+
+    layout.add(std::make_unique<AudioParameterChoice>(juce::ParameterID("Ratio", 1),
+                                                     "Ratio",
+                                                     ratioChoicesArray,
+                                                      3));
+    
+    return layout;
+    
+   
+}
+    
 //==============================================================================
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()

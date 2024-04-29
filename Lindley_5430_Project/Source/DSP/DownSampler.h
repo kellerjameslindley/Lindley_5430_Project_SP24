@@ -29,7 +29,7 @@ class DownSampler {
     float Fs = 48000;
     float newFs = 24000;
     
-    float decimationRatio;
+    float decimationRatio = Fs/newFs;
 };
 
    

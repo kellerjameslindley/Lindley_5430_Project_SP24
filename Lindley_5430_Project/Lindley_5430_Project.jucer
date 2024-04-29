@@ -2,9 +2,13 @@
 
 <JUCERPROJECT id="gsYBb6" name="Lindley_5430_Project" projectType="audioplug"
               useAppConfig="0" addUsingNamespaceToJuceHeader="0" displaySplashScreen="1"
-              jucerFormatVersion="1">
+              jucerFormatVersion="1" pluginFormats="buildAU,buildStandalone,buildVST3">
   <MAINGROUP id="LIpZPv" name="Lindley_5430_Project">
     <GROUP id="{2156E6F4-D3F1-83D8-9322-76E3ECF1F939}" name="Source">
+      <FILE id="W1ojJO" name="BitReducer.cpp" compile="1" resource="0" file="Source/DSP/BitReducer.cpp"/>
+      <FILE id="ZQ2IUb" name="BitReducer.h" compile="0" resource="0" file="Source/DSP/BitReducer.h"/>
+      <FILE id="IHZ5Yn" name="DownSampler.cpp" compile="1" resource="0" file="Source/DSP/DownSampler.cpp"/>
+      <FILE id="vn1R8f" name="DownSampler.h" compile="0" resource="0" file="Source/DSP/DownSampler.h"/>
       <FILE id="EZpMdE" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="f503D1" name="PluginProcessor.h" compile="0" resource="0"

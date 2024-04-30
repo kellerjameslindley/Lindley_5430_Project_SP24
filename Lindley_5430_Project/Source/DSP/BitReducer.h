@@ -9,13 +9,12 @@
 */
 
 #pragma once
-#include <vector>
 #include <cmath>
 
 class BitReducer {
 public:
     
-    BitReducer() {};
+//    BitReducer() {};
     
    
     
@@ -34,11 +33,7 @@ private:
     float Fs = 48000;
     float bitDepth = 24;
     
-    float ampValues;
-    float shrinkInput;
-    float scaleInput;
-    float roundInput;
-    float prepOut;
+    
     float y;
     
 };

@@ -14,6 +14,7 @@
 #include "./DSP/Filter.h"
 
 
+
 //==============================================================================
 /**
 */
@@ -57,21 +58,39 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    float bitDepth = 24.f;
-    int rateDivisor = 10;
-    float filterCutoff = 20000.f;
+    
 
     
     
-    using APVTS = juce::AudioProcessorValueTreeState;
-    static APVTS::ParameterLayout createParameterLayout();
+//    juce::AudioProcessorValueTreeState apvts;
+//    static const juce::StringRef bitDepthKnob;
+//    static const juce::StringRef filterKnob;
+//    static const juce::StringRef downSampleKnob;
+//    static const juce::StringRef button;
+//    
+//    
+//    void bitDepthKnobChanged(float value);
+//    void filterKnobChanged(float value);
+//    void downSampleKnobChanged(float value);
+//    
+//    
+//    void buttonClicked(bool value);
+//    
     
-    APVTS apvts {*this, nullptr, "PARAMETERS", createParameterLayout()};
+   
     
-private:
+    float bitDepth;
+    int rateDivisor;
+    float filterCutoff;
+    bool filterIsPost;
+    
+//private:
     
     //juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     void parameterChanged (const juce::String& parameterID, float newValue) override;
+    
+    juce::AudioProcessorValueTreeState::ParameterLayout createParams();
+
     
     
     

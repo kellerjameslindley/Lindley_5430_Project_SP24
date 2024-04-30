@@ -23,9 +23,6 @@ void DownSampler::processBuffer(float * samples, const int numSamples, const int
             if (fmodf(n,rateDivisor)!= 1) samples[n] = samples[n -  n%rateDivisor];
         }
         
-       
-        
-        
         
     }
 }
@@ -49,15 +46,7 @@ float DownSampler::getFs()
     return Fs;
 };
 
-void DownSampler::setNewFs(float newFs)
-{
-    this->newFs = newFs;
-};
 
-float DownSampler::getNewFs()
-{
-    return Fs;
-};
 
 void DownSampler::setRateDivisor(int rateDivisor)
 {

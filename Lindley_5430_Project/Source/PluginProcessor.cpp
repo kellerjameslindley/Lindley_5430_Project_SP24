@@ -11,6 +11,7 @@
 
 //==============================================================================
 Lindley_5430_ProjectAudioProcessor::Lindley_5430_ProjectAudioProcessor()
+
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -20,9 +21,11 @@ Lindley_5430_ProjectAudioProcessor::Lindley_5430_ProjectAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        )
+    
 #endif
-{
+//apvts(*this,nullptr,"Params",createParams())
 
+{
 
     
     
@@ -122,7 +125,6 @@ void Lindley_5430_ProjectAudioProcessor::prepareToPlay (double sampleRate, int s
     downSample.setFs(sampleRate);
     downSample.setRateDivisor(rateDivisor);
     
-    
 }
 
 void Lindley_5430_ProjectAudioProcessor::releaseResources()
@@ -165,37 +167,40 @@ void Lindley_5430_ProjectAudioProcessor::processBlock (juce::AudioBuffer<float>&
 
     
     auto numSamples = buffer.getNumSamples();
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
+
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
+   
+    filter.setCutoff(filterCutoff);
+    downSample.setRateDivisor(rateDivisor);
+    bitReduce.setBitDepth(bitDepth);
+
     
+
     
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
         {
-            
             auto* channelData = buffer.getWritePointer (channel);
-            bitReduce.processBuffer(channelData, numSamples, channel);
-            filter.processBuffer(channelData, numSamples, channel);
-            downSample.processBuffer(channelData, numSamples, channel);
-
+            
+            if (~filterIsPost){
+                filter.processBuffer(channelData, numSamples, channel);
+                bitReduce.processBuffer(channelData, numSamples, channel);
+                 
+                 downSample.processBuffer(channelData, numSamples, channel);
+            }
+            else{
+                bitReduce.processBuffer(channelData, numSamples, channel);
+                
+                 downSample.processBuffer(channelData, numSamples, channel);
+                filter.processBuffer(channelData, numSamples, channel);
+            }
+            
+          
+            
+            
         }
-    
-      buffer.copyFrom(0, 0, buffer, 0, 0, numSamples);
-      buffer.copyFrom(1, 0, buffer, 1, 0, numSamples);
-    
-  
+
 
     
     
@@ -228,52 +233,52 @@ void Lindley_5430_ProjectAudioProcessor::setStateInformation (const void* data, 
     
 }
 
-juce::AudioProcessorValueTreeState::ParameterLayout Lindley_5430_ProjectAudioProcessor::createParameterLayout()
-{
-    
-    APVTS::ParameterLayout layout;
-    
-    using namespace juce;
-    
-    layout.add(std::make_unique<AudioParameterFloat>(juce::ParameterID("BitDepth", 1),
-                                                    "BitDepth",
-                                                    NormalisableRange<float>(2, 24, 1, 1),
-                                                    24));
-    
-    layout.add(std::make_unique<AudioParameterFloat>(juce::ParameterID("Threshold", 1),
-                                                    "Threshold",
-                                                    NormalisableRange<float>(-60, 12, 1, 1),
-                                                    0));
-    
-    auto attackReleaseRange = NormalisableRange<float>(5, 500, 1, 1);
-    
-    layout.add(std::make_unique<AudioParameterFloat>(juce::ParameterID("Attack", 1),
-                                                    "Attack",
-                                                    attackReleaseRange,
-                                                    50));
-    
-    layout.add(std::make_unique<AudioParameterFloat>(juce::ParameterID("Release", 1),
-                                                    "Release",
-                                                    attackReleaseRange,
-                                                    250));
-    
-    auto ratioChoices = std::vector<double>{1, 1.5, 2, 4, 8, 20};
-    juce::StringArray ratioChoicesArray;
-    
-    for (auto ratioChoice : ratioChoices )
-    {
-        ratioChoicesArray.add(juce::String(ratioChoice, 1));
-    }
-
-    layout.add(std::make_unique<AudioParameterChoice>(juce::ParameterID("Ratio", 1),
-                                                     "Ratio",
-                                                     ratioChoicesArray,
-                                                      3));
-    
-    return layout;
-    
-   
-}
+//juce::AudioProcessorValueTreeState::ParameterLayout Lindley_5430_ProjectAudioProcessor::createParameterLayout()
+//{
+//    
+//  //  APVTS::ParameterLayout layout;
+//    
+////    using namespace juce;
+////    
+//////    layout.add(std::make_unique<AudioParameterFloat>(juce::ParameterID("BitDepth", 1),
+//////                                                    "BitDepth",
+//////                                                    NormalisableRange<float>(2, 24, 1, 1),
+//////                                                    24));
+////    
+////    layout.add(std::make_unique<AudioParameterFloat>(juce::ParameterID("Threshold", 1),
+////                                                    "Threshold",
+////                                                    NormalisableRange<float>(-60, 12, 1, 1),
+////                                                    0));
+////    
+////    auto attackReleaseRange = NormalisableRange<float>(5, 500, 1, 1);
+////    
+////    layout.add(std::make_unique<AudioParameterFloat>(juce::ParameterID("Attack", 1),
+////                                                    "Attack",
+////                                                    attackReleaseRange,
+////                                                    50));
+////    
+////    layout.add(std::make_unique<AudioParameterFloat>(juce::ParameterID("Release", 1),
+////                                                    "Release",
+////                                                    attackReleaseRange,
+////                                                    250));
+////    
+////    auto ratioChoices = std::vector<double>{1, 1.5, 2, 4, 8, 20};
+////    juce::StringArray ratioChoicesArray;
+////    
+////    for (auto ratioChoice : ratioChoices )
+////    {
+////        ratioChoicesArray.add(juce::String(ratioChoice, 1));
+////    }
+////
+////    layout.add(std::make_unique<AudioParameterChoice>(juce::ParameterID("Ratio", 1),
+////                                                     "Ratio",
+////                                                     ratioChoicesArray,
+////                                                      3));
+////    
+////    return layout;
+////    
+//   
+//}
     
 //==============================================================================
 // This creates new instances of the plugin..

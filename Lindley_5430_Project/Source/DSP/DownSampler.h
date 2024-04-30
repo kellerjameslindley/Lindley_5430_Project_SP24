@@ -23,8 +23,7 @@ class DownSampler {
     void setFs(float Fs);
     float getFs();
 
-    void setNewFs(float newFs);
-    float getNewFs();
+
 
     void setRateDivisor(int rateDivisor);
 

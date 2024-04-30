@@ -14,6 +14,10 @@
 // Define the functions of Filter
 void Filter::processBuffer(float * samples, const int numSamples, const int channel)
 {
+    
+    updateCoefficients();
+
+    
     // Perform the processing
     for (int n = 0; n < numSamples ; n++){
         float x = samples[n];
@@ -39,6 +43,7 @@ float Filter::processSample(float x, int channel)
 void Filter::setFs(float sampleRate)
 {
     this->Fs = sampleRate;
+    updateCoefficients();
 };
 
 float Filter::getFs()
@@ -58,6 +63,7 @@ void Filter::setCutoff(float freq)
 
     // Bandwidth/slope/resonance parameter
     alpha = std::sin(w0) / (2.0f * Q);
+    updateCoefficients();
 
 };
 
@@ -72,6 +78,7 @@ void Filter::setQ(float Q)
 
     // Bandwidth/slope/resonance parameter
     alpha = std::sin(w0) / (2.0f * Q);
+    updateCoefficients();
 
 };
 
@@ -85,10 +92,24 @@ void Filter::setAmpdB(float ampdB)
     this->ampdB = ampdB;
 
     A = std::pow(10.0f, ampdB / 40.0f); // Linear amplitude
+    updateCoefficients();
 
 };
 
 float Filter::getAmpdB()
 {
     return ampdB;
+    
+};
+
+void Filter::updateCoefficients()
+{
+  
+        b0 = (1.0f - std::cos(w0)) / 2.0f;
+        b1 = 1.0f - std::cos(w0);
+        b2 = (1.0f - std::cos(w0)) / 2.0f;
+        a0 = 1.0f + alpha;
+        a1 = -2.0f * std::cos(w0);
+        a2 = 1.0f - alpha;
+       
 };

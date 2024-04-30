@@ -9,7 +9,7 @@
 */
 
 #include "BitReducer.h"
-
+#include <cmath>
 
 
 void BitReducer::processBuffer(float * buffer, const int numSamples, const int channel)
@@ -33,7 +33,7 @@ float BitReducer::processSample(float x, int channel)
     
     float remainder =fmodf(x, 1/totalQLevels);
     
-    y = x - remainder;
+    float y = x - remainder;
     
 
     return y;
@@ -56,5 +56,5 @@ void BitReducer::setBitDepth(float bitDepth)
 
 float BitReducer::getBitDepth()
 {
-    return Fs;
+    return bitDepth;
 };

@@ -110,8 +110,17 @@ void Lindley_5430_ProjectAudioProcessorEditor::sliderValueChanged(juce::Slider *
     
 }
 
+
 void Lindley_5430_ProjectAudioProcessorEditor::checkButton()
 {
         audioProcessor.filterIsPost = filterPost.getToggleState();
     
 }
+
+//void Lindley_5430_ProjectAudioProcessorEditor::textButtonValueChanged(juce::TextButton *textbutton)
+//{
+//    if (textbutton ==&filterPost) {
+//        audioProcessor.filterIsPost = true;
+//    }
+//    
+//}

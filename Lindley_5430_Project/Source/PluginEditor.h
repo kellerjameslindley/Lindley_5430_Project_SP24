@@ -15,7 +15,8 @@
 /**
 */
 class Lindley_5430_ProjectAudioProcessorEditor  : public juce::AudioProcessorEditor,
-                                                  public juce::Slider::Listener
+                                                  public juce::Slider::Listener,
+//public juce::TextButton::Listener
 //public juce::Button::Listener
 
 {
@@ -29,6 +30,7 @@ public:
     
     void sliderValueChanged(juce::Slider * slider) override;
     void checkButton() ;
+   // void textButtonValueChanged(juce::TextButton * textbutton) override;
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
